@@ -26,16 +26,16 @@ class Application {
     return compose(this.middleware).call(null, action)
   }
 
-  dispatch(event, action = {}) {
-    return this.apply(this.createAction(event, action))
+  dispatch(event, params = {}, data = {}) {
+    return this.apply(this.createAction(event, { params }, data))
   }
 
-  createAction(event, action = {}) {
-    return Object.assign(action, { event })
+  createAction(event, params = {}, data = {}) {
+    return Object.assign({}, params, data, { event })
   }
 
   createActionFromKoaContext(ctx) {
-    return this.createAction('route.change', ctx)
+    return this.createAction('route.change', {}, ctx)
   }
 
   launch() {

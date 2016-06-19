@@ -28,7 +28,7 @@ export default function convert(app) {
   const {dispatch} = app
 
   return only('convert.unit', async (action, next) => {
-    const {value, type, to, from = null} = action
+    const {type, value, to, from = null} = action.params
 
     if (from === null) {
       from = await dispatch(`settings.convert.units.${type}`)

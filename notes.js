@@ -194,9 +194,53 @@ async function convert(type, value, to, from = null) {
   return await resolve('convert.unit')(type, value, to, from)
 }
 
+const convert = resolve('convert.unit')
 convert(type, value, to, from)
+
+// Cache Middleware
+const cache = resolve('cache')
+cache.get('yahoocurrency.data')
+cache.set('yahoocurrency.data', data, 24 * 60 * 60)
 
 // Plugin
 export default function(app) {
   // ...
 }
+
+
+
+///////////////////////////
+// Resolve proxy experiments
+
+(function() {
+  let handler = {
+    get: function(target, name) {
+      console.log('get', target, name)
+      let actionType = target.__action_type ? (target.__action_type + '.' + name) : name
+      console.log('get2', actionType)
+      return resolve(actionType)
+    },
+
+    apply: function(target, thisArg, args) {
+      console.log('apply', target, args)
+      console.log('apply2', target.__app, target.__action_type)
+      return target.__app.dispatch(target.__action_type, args)
+    }
+  }
+
+  function resolve(actionType = '') {
+    let state = function() {}
+    state.__action_type = actionType
+    state.__app = {
+      dispatch: function(event, action) {
+        console.log(event, action)
+      }
+    }
+
+    return new Proxy(state, handler)
+  }
+
+  var $do = resolve()
+  $do.some.action()
+  $do.some.action('var1', 'var2', 'var3')
+})()
