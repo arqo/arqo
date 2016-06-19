@@ -12,11 +12,11 @@
     let result = await convert.unit(type, value, to, from)
 
     // Or:
-    const do = resolve()
-    let result = do.convert.unit(type, value, to, from)
+    const $do = resolve()
+    let result = await $do.convert.unit(type, value, to, from)
 
     // Which is the same as:
-    let result = dispatch('convert.unit', { type, value, to, from })
+    let result = await dispatch('convert.unit', { type, value, to, from })
  */
 
 let handler = {
@@ -31,8 +31,9 @@ let handler = {
 }
 
 export default function resolve(actionType = '') {
-  return new Proxy({
-    '__action_type': actionType
-    '__app':         this
-  }, handler)
+  let state = function() {}
+  state.__action_type = actionType
+  state.__app = this
+
+  return new Proxy(state, handler)
 }
