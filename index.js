@@ -1,8 +1,6 @@
 import Argo from './modules/argo'
+import config from './config'
 
 const argo = new Argo()
 
-argo.use(require('./modules/argo-core'))
-argo.use(require('./modules/argo-core-user'))
-argo.use(require('./modules/argo-core-permission'))
-argo.use(require('./modules/argo-core-localization'))
+argo.use(require('./modules/argo-core')(argo, config))

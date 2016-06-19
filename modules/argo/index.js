@@ -1,6 +1,5 @@
 import Koa from 'koa'
 import compose from 'compose'
-import resolve from './argo-core/resolve'
 
 class Application {
   construct(koa = null) {

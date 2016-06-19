@@ -142,7 +142,7 @@ argo.use(require('argo-core-localization'))
 // Routing
 const only = require('argo-action-filters').only
 const route = only('route.change')
-const admin = await resolve('router').any('/admin')
+const admin = require('argo-router').any('/admin')
 const adminRoute = compose(route, admin) // ????
 app.use(adminRoute('/posts/:id', async function(action, next) {
   // Handle route
