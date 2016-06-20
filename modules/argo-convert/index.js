@@ -1,4 +1,4 @@
-import { only } from '../argo-action-filters'
+import { startsWith } from '../argo-action-filters'
 
 /*
   Automatically convert units based on settings
@@ -21,17 +21,22 @@ import { only } from '../argo-action-filters'
     }
 
   Usage:
-    const convert = resolve('convert.unit')
-    convert(type, value, to, from)
+    const convert = resolve('convert')
+    convert.length(value, to, from)
  */
 export default function convert(app) {
   const {dispatch} = app
 
-  return only('convert.unit', async (action, next) => {
-    const {type, value, to, from = null} = action.params
+  return startsWith('convert.', async (action, next) => {
+    const [, type] = action.event.split('.')
+    const [value, to, from = null] = action.params
+
+    if (!type) {
+      throw new Error('Type required in action event.')
+    }
 
     if (from === null) {
-      from = await dispatch(`settings.convert.units.${type}`)
+      from = await dispatch(`settings.units.${type}`)
     }
 
     if (from == to) {
@@ -54,8 +59,8 @@ export default function convert(app) {
       }
 
       return value * (to / from)
-    } else {
-      return null
     }
+
+    return null
   })
 }
