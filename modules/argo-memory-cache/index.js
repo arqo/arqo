@@ -2,11 +2,17 @@ let cache = {}
 
 const methods = {
   function get(key) {
-    return cache[key] ? cache[key].value : null
+    const data = cache[key]
+
+    if (data && data.expiry > Date.now()) {
+      return data.value
+    }
+
+    return null
   },
 
   function set(key, value, expiry = 24 * 60 * 60) {
-    cache[key] = { value, expiry }
+    cache[key] = { value, expiry: Date.now() + expiry }
   }
 }
 

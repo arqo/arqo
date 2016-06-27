@@ -1,5 +1,10 @@
 export default {
   settings: {
+    culture: {
+      default: 'en-US',
+      active: ['en-US', 'fr-FR']
+    },
+
     // Default Units
     units: {
       weight:   'kg',

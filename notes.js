@@ -9,6 +9,8 @@ argo-core-page
 argo-trait-versionable
 argo-trait-localizable
 argo-trait-schedulable
+argo-trait-sluggable
+argo-trait-softdeletable
 argo-content-admin
 
 // Fields
@@ -244,3 +246,104 @@ export default function(app) {
   $do.some.action()
   $do.some.action('var1', 'var2', 'var3')
 })()
+
+
+
+
+///////////////////
+// Models
+
+// Log of all mutations
+const log: [
+  {
+    event: 'product.mutate',
+    body: {
+      price: 129.9999
+    },
+    audit: {
+      user_id: 1,
+      timestamp: '2016-05-01T01:59:00Z'
+    }
+  }
+]
+
+const product = {
+  type: 'simple', // simple, bundle, virtual, ...
+  status: 'published',
+  name: {
+    'en-US': 'Test Product'
+  },
+  slug: {
+    'en-US': 'test-product'
+  }
+  price: {
+    default: 129.9999
+  },
+  taxClass: 1,
+  shippingClass: 1,
+  summary: {
+    'en-US': 'This is a test product'
+  },
+  categories: [ 1, 3 ],
+  tags: [ 'sometag', 'anothertag' ],
+  attributes: {
+    strength: 5,
+    scent: 'fruity'
+  },
+
+  // Variant products
+  options: {
+    size: [
+      {
+        name: 'Small',
+        value: 's'
+      },
+      {
+        name: 'Medium',
+        value: 'm'
+      }
+    ],
+    color: [
+      {
+        name: 'Red',
+        value: 'red'
+      },
+      {
+        name: 'Green',
+        value: 'green'
+      }
+    ]
+  },
+  variants: [
+    ['s', 'red', {
+      price: [10.0000, 'negate', 'percentage'],
+      inventory: 99,
+      images: ['small-red.jpg']
+    }],
+    ['m', 'red', {
+      inventory: 0
+    }]
+  ],
+
+  // Promotion engine
+  promotions: [
+    {
+      ref: 'specialPrice',
+      options: {
+        price: [9.0000, 'negate', 'amount'], // negatePercentage, addAmount, addPercentage
+        from: '2016-04-20T01:59:00Z',
+        until: '2016-05-01T01:59:00Z'
+      }
+    },
+    {
+      ref: 'buyXGetXFree',
+      options: {
+        buy: 2,
+        free: 1,
+        excludes: [1001, 1134],
+        from: '2016-04-20T01:59:00Z',
+        until: '2016-05-01T01:59:00Z'
+      }
+    }
+  ],
+}
