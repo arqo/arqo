@@ -74,7 +74,7 @@ async function getYahooFinanceCurrencyRates(app, settings) {
         }
 
         rates[currency] = { value }
-      }
+      })
 
       data = {
         updated: Date.now(),

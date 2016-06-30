@@ -4,7 +4,7 @@
 
 
 class Product {
-  static get async fields(dispatch) {
+  static async fields(dispatch) {
     const T = dispatch('model.types')
 
     return await dispatch('product.fields', {
@@ -15,7 +15,7 @@ class Product {
       cost:        T.objectOf(Money),
       sku:         T.string,
       description: T.string,
-      categories:  T.oneOfType([T.objectOf(Category), T.arrayOf(T.number)])
+      categories:  T.oneOfType([T.objectOf(Category), T.arrayOf(T.number)]),
       stock:       T.number,
       images:      T.array,
       active:      T.bool,
@@ -26,11 +26,11 @@ class Product {
     })
   }
 
-  get variants() {
+  async variants() {
     return await this.query(this.variants)
   }
 
-  get categories() {
+  async categories() {
     return await Category.query(this.category_ids)
   }
 
@@ -38,16 +38,16 @@ class Product {
     return startsWith('product.', async (action, next) => {
       const [, eventType, queryName] = action.event.split('.')
 
-      case eventType {
-        'query':
+      switch (eventType) {
+        case 'query':
           return Product.query(queryName, action.params)
-        'mutate':
+        case 'mutate':
           return Product.mutate(queryName, action.params)
-        'get':
+        case 'get':
           return Product.query('get', action.params)
-        'update':
+        case 'update':
           return Product.mutate('update', action.params)
-        'delete':
+        case 'delete':
           return Product.mutate('delete', action.params)
       }
     })

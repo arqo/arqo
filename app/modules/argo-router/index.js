@@ -41,6 +41,6 @@ export function patch() {
 
 }
 
-export function delete() {
+export function del() {
 
 }

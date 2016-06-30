@@ -1,8 +1,8 @@
 import Koa from 'koa'
-import compose from 'compose'
+import compose from 'koa-compose'
 
 class Application {
-  construct(koa = null) {
+  constructor(koa = null) {
     this.koa        = koa === null ? new Koa() : koa
     this.middleware = []
 
@@ -11,6 +11,7 @@ class Application {
     })
 
     // Bind Class Functions
+    this.use                        = this.use.bind(this)
     this.apply                      = this.apply.bind(this)
     this.dispatch                   = this.dispatch.bind(this)
     this.createAction               = this.createAction.bind(this)
@@ -23,7 +24,10 @@ class Application {
   }
 
   apply(action) {
-    return compose(this.middleware).call(null, action)
+    return compose(this.middleware)
+            .call(null, action)
+            .then(() => console.log('dispatch done'))
+            .catch((err) => console.log('dispatch error', err))
   }
 
   dispatch(event, params = {}, data = {}) {

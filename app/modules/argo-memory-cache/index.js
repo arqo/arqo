@@ -1,7 +1,9 @@
+import { startsWith } from '../argo-action-filters'
+
 let cache = {}
 
 const methods = {
-  function get(key) {
+  get: function(key) {
     const data = cache[key]
 
     if (data && data.expiry > Date.now()) {
@@ -11,7 +13,7 @@ const methods = {
     return null
   },
 
-  function set(key, value, expiry = 24 * 60 * 60) {
+  set: function(key, value, expiry = 24 * 60 * 60) {
     cache[key] = { value, expiry: Date.now() + expiry }
   }
 }
