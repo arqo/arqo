@@ -1,6 +1,11 @@
 import Koa from 'koa'
 import compose from '../argo-compose-middleware'
 
+// Log unhandled promise failures
+process.on('unhandledRejection', (reason) => {
+  console.log('unhandledRejection: ' + reason);
+});
+
 class Application {
   constructor(koa = null) {
     this.koa        = koa === null ? new Koa() : koa
