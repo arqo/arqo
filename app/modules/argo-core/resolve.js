@@ -15,16 +15,14 @@
     const $do = resolve()
     let result = await $do.convert.unit(type, value, to, from)
 
-    ///// @todo FIGURE OUT HOW TO MAKE $do.convert.unit(type, value, to, from) WORK SINCE WE DON"T HAVE PARAMETER NAMES!!!!
-
     // Which is the same as:
-    let result = await dispatch('convert.unit', { type, value, to, from })
+    let result = await dispatch('convert.unit', [ type, value, to, from ])
  */
 
 let handler = {
   get: function(target, name) {
     let actionType = target.__action_type ? (target.__action_type + '.' + name) : name
-    return resolve(actionType)
+    return resolve.call(target.__app, actionType)
   },
 
   apply: function(target, thisArg, args) {
