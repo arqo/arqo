@@ -1,5 +1,5 @@
 import Koa from 'koa'
-import compose from 'koa-compose'
+import compose from '../argo-compose-middleware'
 
 class Application {
   constructor(koa = null) {
@@ -24,10 +24,11 @@ class Application {
   }
 
   apply(action) {
-    return compose(this.middleware)
-            .call(null, action)
-            .then(() => console.log('dispatch done'))
-            .catch((err) => console.log('dispatch error', err))
+    const finalTaskPromise = compose(this.middleware)(action)
+
+    finalTaskPromise.catch((e) => console.error(e))
+
+    return finalTaskPromise
   }
 
   dispatch(event, params = {}, data = {}) {
