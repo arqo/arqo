@@ -13,27 +13,31 @@ export default function compose (middleware) {
 
   return function (action) {
     let index = -1
-    let prev
+    let out
+    let prevTaskPromise = Promise.resolve(undefined)
 
-    const next = (_prev) => {
+    const next = (prev) => {
+      console.log('next')
       const task = middleware[++index]
-      prev = typeof(_prev) === 'undefined' ? prev : _prev
+      prev = typeof(prev) === 'undefined' ? out : prev
 
       if(!task) {
-        return Promise.resolve(prev)
+        out = false
+        return
       }
 
       const res = task(action, next, prev)
 
-      prev = typeof(res) !== 'undefined' ? res : prev
+      out = typeof(res) !== 'undefined' ? res : prev
 
-      return isPromise(res) ? res : Promise.resolve(prev)
+      console.log('res', res)
+      return isPromise(res) ? res : Promise.resolve(out)
     }
 
-    const finalTaskPromise = middleware.reduce(function(prevTaskPromise) {
-      return prevTaskPromise.then(next)
-    }, Promise.resolve(undefined))
+    while (!isPromise(out)) {
+      prevTaskPromise = prevTaskPromise.then(next)
+    }
 
-    return finalTaskPromise
+    return Promise.resolve(out)
   }
 }
