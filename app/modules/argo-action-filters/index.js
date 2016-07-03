@@ -9,7 +9,7 @@
     only('route.change', async function(action, next) { ... })
  */
 export function only(event, fn) {
-  return async function(action, next) {
+  return function(action, next) {
     if (event === action.event) {
       return fn(action, next)
     }
@@ -25,7 +25,7 @@ export function only(event, fn) {
     oneOf(['route.change', 'other.action'], async function(action, next) { ... })
  */
 export function oneOf(events, fn) {
-  return async function(action, next) {
+  return function(action, next) {
     if (events.indexOf(action.event) >= 0) {
       return fn(action, next)
     }
@@ -41,7 +41,7 @@ export function oneOf(events, fn) {
     startsWith('route.', async function(action, next) { ... })
  */
 export function startsWith(event, fn) {
-  return async function(action, next) {
+  return function(action, next) {
     if (action.event.indexOf(event) === 0) {
       return fn(action, next)
     }
@@ -57,7 +57,7 @@ export function startsWith(event, fn) {
     matches(/$route.(.*)/, async function(action, next) { ... })
  */
 export function matches(regex, fn) {
-  return async function(action, next) {
+  return function(action, next) {
     if (action.event.test(regex)) {
       return fn(action, next)
     }

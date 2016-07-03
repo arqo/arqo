@@ -29,7 +29,7 @@ export default function convert(app) {
 
   return startsWith('convert.', async (action, next) => {
     const [, type] = action.event.split('.')
-    const [value, to, from = null] = action.params
+    let [value, to, from = null] = action.params
 
     if (!type) {
       throw new Error('Type required in action event.')
@@ -49,18 +49,18 @@ export default function convert(app) {
       if (config[from]) {
         from = config[from].value
       } else {
-        return null
+        return
       }
 
       if (config[to]) {
         to = config[to].value
       } else {
-        return null
+        return
       }
 
       return value * (to / from)
     }
 
-    return null
+    return
   })
 }
