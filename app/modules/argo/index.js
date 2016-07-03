@@ -19,6 +19,11 @@ class Application {
   }
 
   use(fn) {
+    if (Array.isArray(fn)) {
+      fn.map((m) => this.use(m))
+      return this
+    }
+
     this.middleware.push(fn)
     return this
   }
