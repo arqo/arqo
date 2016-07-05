@@ -41,11 +41,11 @@ class Application {
     return finalTaskPromise
   }
 
-  dispatch(event, params = {}, data = {}) {
+  dispatch(event, params = [], data = {}) {
     return this.apply(this.createAction(event, { params }, data))
   }
 
-  createAction(event, params = {}, data = {}) {
+  createAction(event, params = [], data = {}) {
     return Object.assign({}, params, data, { event })
   }
 

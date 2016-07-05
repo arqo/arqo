@@ -15,7 +15,7 @@ export default function compose (middleware) {
     let index = -1
     let out
 
-    const next = (prev) => {
+    async function next(prev) {
       const task = middleware[++index]
       prev = typeof(prev) === 'undefined' ? out : prev
 
@@ -23,11 +23,11 @@ export default function compose (middleware) {
         return Promise.resolve(out)
       }
 
-      const res = task(action, next, prev)
+      const res = await task(action, next, prev)
 
       out = typeof(res) !== 'undefined' ? res : prev
 
-      return isPromise(res) ? res : Promise.resolve(out)
+      return Promise.resolve(out)
     }
 
     const finalTaskPromise = middleware.reduce(function(prevTaskPromise) {
@@ -37,3 +37,5 @@ export default function compose (middleware) {
     return finalTaskPromise
   }
 }
+
+// 1.then(2.then(3.then(4.then))).then(1.2).then(4.2)
