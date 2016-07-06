@@ -34,23 +34,23 @@ describe('Argo', function() {
   describe('#dispatch()', function() {
     it('should dispatch an action', function() {
       this.argo.use((action) => action)
-      this.argo.dispatch('something').should.be.fulfilledWith({
-        event: 'something',
+      this.argo.dispatch('normal.action').should.be.fulfilledWith({
+        event: 'normal.action',
         params: []
       })
     })
 
     it('should dispatch an action with parameters', function() {
       this.argo.use((action) => action)
-      this.argo.dispatch('something', [1, 2, 3]).should.be.fulfilledWith({
-        event: 'something',
+      this.argo.dispatch('action.with.params', [1, 2, 3]).should.be.fulfilledWith({
+        event: 'action.with.params',
         params: [1, 2, 3]
       })
     })
 
     it('should return a value', function() {
       this.argo.use(() => 'test')
-      this.argo.dispatch('something').should.be.fulfilledWith('test')
+      this.argo.dispatch('return.value').should.be.fulfilledWith('test')
     })
 
     it('should return a value (async)', async function() {
@@ -60,19 +60,22 @@ describe('Argo', function() {
         }
       ])
 
-      let res = await this.argo.dispatch('something')
+      let res = await this.argo.dispatch('return.value.async')
       res.should.equal('test')
     })
 
-    it('should skip the return value if a middleware returns undefined', async function() {
+    it('should skip undefined', async function() {
       this.argo.use([
-        async function() { },
-        async function() { return 'test' },
-        async function() { },
-        function() { }
+        async function one() { },
+        async function two() {
+          await wait(3)
+          return 'test'
+        },
+        async function three() { },
+        function four() { }
       ])
 
-      let res = await this.argo.dispatch('something')
+      let res = await this.argo.dispatch('undefined.check')
       res.should.equal('test')
     })
 
@@ -80,34 +83,55 @@ describe('Argo', function() {
       let arr = []
 
       this.argo.use([
-        async function(_, next) {
+        async function one(_, next) {
           arr.push(1)
           await wait(4)
-          await next
+          await next()
           arr.push(5)
         },
-        async function(_, next) {
+        async function two(_, next) {
           arr.push(2)
           await wait(3)
-          await next
+          await next()
           arr.push(6)
         },
-        async function(_, next) {
+        async function three(_, next) {
           arr.push(3)
           await wait(2)
-          await next
+          await next()
           arr.push(7)
         },
-        async function(_, next) {
+        async function four(_, next) {
           arr.push(4)
           await wait(1)
-          await next
+          await next()
           arr.push(8)
         }
       ])
 
-      await this.argo.dispatch('something')
+      await this.argo.dispatch('await.next')
       arr.should.eql([1,2,3,4,5,6,7,8])
+    })
+
+    it('should await next and skip undefined', async function() {
+      this.argo.use([
+        async function one(_, next) {
+          await next()
+          return
+        },
+        async function two() {
+          await wait(3)
+          return 'test'
+        },
+        async function three(_, next) {
+          let prev = await next()
+          return prev + '.two'
+        },
+        async function four() {}
+      ])
+
+      let res = await this.argo.dispatch('await.next.undefined')
+      res.should.equal('test.two')
     })
   })
 })
