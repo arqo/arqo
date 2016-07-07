@@ -1,5 +1,5 @@
 {
-  "name": "argo",
+  "name": "arqo",
   "version": "1.0.0",
   "engines": {
     "node": ">=6.0.0"
@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/patrickgalbraith/argo.git"
+    "url": "git+https://github.com/arqo/arqo.git"
   },
   "author": "Patrick Galbraith",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/patrickgalbraith/argo/issues"
+    "url": "https://github.com/arqo/arqo/issues"
   },
-  "homepage": "https://github.com/patrickgalbraith/argo#readme",
+  "homepage": "https://github.com/arqo/arqo#readme",
   "dependencies": {
     "is-promise": "^2.1.0",
     "isomorphic-fetch": "^2.2.1",
