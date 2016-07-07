@@ -74,7 +74,7 @@ export default function Products(app) {
 
 
 // Example mixin
-export default function ArgoModel(child) {
+export default function ArqoModel(child) {
   child.query = () => {
 
   }

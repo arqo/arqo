@@ -1,4 +1,4 @@
-import { only, startsWith } from '../argo-action-filters'
+import { only, startsWith } from '../arqo-action-filters'
 
 // Returns setting from config
 // Allows easy access to configuration variables

@@ -1,5 +1,5 @@
 import get from 'lodash/get'
-import { only } from '../argo-action-filters'
+import { only } from '../arqo-action-filters'
 
 export default function convertCurrency(app) {
   const { dispatch } = app
