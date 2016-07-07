@@ -87,25 +87,26 @@ describe('Argo', function() {
           arr.push(1)
           await wait(4)
           await next()
-          arr.push(5)
+          arr.push(8)
         },
         async function two(_, next) {
           arr.push(2)
           await wait(3)
           await next()
-          arr.push(6)
+          arr.push(7)
         },
         async function three(_, next) {
           arr.push(3)
           await wait(2)
           await next()
-          arr.push(7)
+          await wait(2)
+          arr.push(6)
         },
         async function four(_, next) {
           arr.push(4)
           await wait(1)
           await next()
-          arr.push(8)
+          arr.push(5)
         }
       ])
 
@@ -119,13 +120,13 @@ describe('Argo', function() {
           await next()
           return
         },
-        async function two() {
-          await wait(3)
-          return 'test'
-        },
-        async function three(_, next) {
+        async function two(_, next) {
           let prev = await next()
           return prev + '.two'
+        },
+        async function three() {
+          await wait(3)
+          return 'test'
         },
         async function four() {}
       ])

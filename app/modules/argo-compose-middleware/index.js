@@ -1,5 +1,13 @@
 import isPromise from 'is-promise'
 
+function later(fn) {
+  return new Promise(function(resolve, reject) {
+    process.nextTick(function() {
+      fn().then(resolve)
+    })
+  })
+}
+
 export default function compose (middleware) {
   if (!Array.isArray(middleware)) {
     throw new TypeError('Middleware stack must be an array!')
@@ -12,7 +20,7 @@ export default function compose (middleware) {
   }
 
   return async function (action) {
-    let index = -1
+    let index = middleware.length
     let output
 
     const wrapTask = (task, action, prev) => {
@@ -31,15 +39,19 @@ export default function compose (middleware) {
     let pending = []
 
     const finalTaskPromise = middleware.reduce(function(prev, task) {
-      let i = ++index
-      pending.push(prev)
+      let i = --index
+
+      if (i !== middleware.length) {
+        pending.unshift(prev)
+      }
 
       return wrapTask(task, action, function() {
-        return pending[i]
+        return later(() => pending[i])
       })
     }, Promise.resolve(undefined))
 
-    pending.push(finalTaskPromise)
+    pending.unshift(finalTaskPromise)
+    pending.unshift(Promise.resolve(undefined))
 
     await Promise.all(pending)
 
