@@ -1,5 +1,5 @@
 import should from 'should'
-import Argo from '../'
+import Arqo from '../'
 
 function wait(time) {
   return new Promise(function(resolve, reject) {
@@ -9,23 +9,23 @@ function wait(time) {
   })
 }
 
-describe('Argo', function() {
+describe('Arqo', function() {
   beforeEach(function() {
-    this.argo = new Argo()
+    this.arqo = new Arqo()
   })
 
   describe('#use()', function() {
     it('should take a function and return itself', function() {
-      this.argo.use(() => {}).should.equal(this.argo)
+      this.arqo.use(() => {}).should.equal(this.arqo)
     })
 
     it('should take an array of functions and return itself', function() {
-      this.argo.use([() => {}]).should.equal(this.argo)
+      this.arqo.use([() => {}]).should.equal(this.arqo)
     })
 
     it('should take a nested array of functions and flatten them', function() {
       var fn = () => {}
-      this.argo.use([
+      this.arqo.use([
         fn, [fn, fn, [fn, [fn, fn]]]
       ]).middleware.length.should.equal(6)
     })
@@ -33,39 +33,39 @@ describe('Argo', function() {
 
   describe('#dispatch()', function() {
     it('should dispatch an action', function() {
-      this.argo.use((action) => action)
-      this.argo.dispatch('normal.action').should.be.fulfilledWith({
+      this.arqo.use((action) => action)
+      this.arqo.dispatch('normal.action').should.be.fulfilledWith({
         event: 'normal.action',
         params: []
       })
     })
 
     it('should dispatch an action with parameters', function() {
-      this.argo.use((action) => action)
-      this.argo.dispatch('action.with.params', [1, 2, 3]).should.be.fulfilledWith({
+      this.arqo.use((action) => action)
+      this.arqo.dispatch('action.with.params', [1, 2, 3]).should.be.fulfilledWith({
         event: 'action.with.params',
         params: [1, 2, 3]
       })
     })
 
     it('should return a value', function() {
-      this.argo.use(() => 'test')
-      this.argo.dispatch('return.value').should.be.fulfilledWith('test')
+      this.arqo.use(() => 'test')
+      this.arqo.dispatch('return.value').should.be.fulfilledWith('test')
     })
 
     it('should return a value (async)', async function() {
-      this.argo.use([
+      this.arqo.use([
         async function() {
           return 'test'
         }
       ])
 
-      let res = await this.argo.dispatch('return.value.async')
+      let res = await this.arqo.dispatch('return.value.async')
       res.should.equal('test')
     })
 
     it('should skip undefined return values', async function() {
-      this.argo.use([
+      this.arqo.use([
         async function one() { },
         async function two() {
           await wait(3)
@@ -75,18 +75,18 @@ describe('Argo', function() {
         function four() { }
       ])
 
-      let res = await this.argo.dispatch('undefined.check')
+      let res = await this.arqo.dispatch('undefined.check')
       res.should.equal('test')
     })
 
     it('should return undefined with no middleware', function() {
-      this.argo.dispatch('undefined.no.middleware').should.be.fulfilledWith(undefined)
+      this.arqo.dispatch('undefined.no.middleware').should.be.fulfilledWith(undefined)
     })
 
     it('should await next', async function() {
       let arr = []
 
-      this.argo.use([
+      this.arqo.use([
         async function one(_, next) {
           arr.push(1)
           await wait(4)
@@ -116,12 +116,12 @@ describe('Argo', function() {
         }
       ])
 
-      await this.argo.dispatch('await.next')
+      await this.arqo.dispatch('await.next')
       arr.should.eql([1,2,3,4,5,6,7,8])
     })
 
     it('should await next and skip undefined return values', async function() {
-      this.argo.use([
+      this.arqo.use([
         async function one(_, next) {
           await next()
           return
@@ -137,7 +137,7 @@ describe('Argo', function() {
         async function four() {}
       ])
 
-      let res = await this.argo.dispatch('await.next.undefined')
+      let res = await this.arqo.dispatch('await.next.undefined')
       res.should.equal('test.two')
     })
   })

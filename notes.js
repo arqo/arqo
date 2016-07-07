@@ -1,74 +1,74 @@
-argo-core
-argo-core-users
-argo-core-permissions
-argo-core-localization
-argo-core-settings
+arqo-core
+arqo-core-users
+arqo-core-permissions
+arqo-core-localization
+arqo-core-settings
 
 // Content
-argo-core-page
-argo-trait-versionable
-argo-trait-localizable
-argo-trait-schedulable
-argo-trait-sluggable
-argo-trait-softdeletable
-argo-content-admin
+arqo-core-page
+arqo-trait-versionable
+arqo-trait-localizable
+arqo-trait-schedulable
+arqo-trait-sluggable
+arqo-trait-softdeletable
+arqo-content-admin
 
 // Fields
-argo-field
-argo-field-group
-argo-field-repeater
-argo-field-polymorphic-repeater  // extends argo-field-type-repeater
+arqo-field
+arqo-field-group
+arqo-field-repeater
+arqo-field-polymorphic-repeater  // extends arqo-field-type-repeater
 
-argo-field-text
-argo-field-textarea
-argo-field-select
-argo-field-wysiwyg
-argo-field-code
-argo-field-map
-argo-field-media
-argo-field-image // extends argo-field-type-media
-argo-field-video // extends argo-field-type-media
-argo-field-related
+arqo-field-text
+arqo-field-textarea
+arqo-field-select
+arqo-field-wysiwyg
+arqo-field-code
+arqo-field-map
+arqo-field-media
+arqo-field-image // extends arqo-field-type-media
+arqo-field-video // extends arqo-field-type-media
+arqo-field-related
 
 // Blog
-argo-blog
-argo-blog-admin
+arqo-blog
+arqo-blog-admin
 
 // Shop
-argo-shop
-argo-shop-admin
-argo-shop-review
+arqo-shop
+arqo-shop-admin
+arqo-shop-review
 
-argo-shop-payment-mock
-argo-shop-payment-paypalstandard
+arqo-shop-payment-mock
+arqo-shop-payment-paypalstandard
 
-argo-shop-shipping-austpost
-argo-shop-shipping-fedex
-argo-shop-shipping-flatrate
-argo-shop-shipping-mock
+arqo-shop-shipping-austpost
+arqo-shop-shipping-fedex
+arqo-shop-shipping-flatrate
+arqo-shop-shipping-mock
 
-argo-shop-tax-flatrate
-argo-shop-discount-simple
+arqo-shop-tax-flatrate
+arqo-shop-discount-simple
 
 // Social
-argo-social
-argo-social-admin
-argo-social-discussion
-argo-social-group
+arqo-social
+arqo-social-admin
+arqo-social-discussion
+arqo-social-group
 
-argo-marketing-ab
-argo-marketing-contact
-argo-marketing-personas
-argo-marketing-seo
+arqo-marketing-ab
+arqo-marketing-contact
+arqo-marketing-personas
+arqo-marketing-seo
 
 // Plugins
-argo-banhammer
-argo-convert
-argo-yahoocurrency
+arqo-banhammer
+arqo-convert
+arqo-yahoocurrency
 
 // Themes
-argo-theme-admin
-argo-theme-alpha
+arqo-theme-admin
+arqo-theme-alpha
 
 
 
@@ -76,10 +76,10 @@ argo-theme-alpha
 
 // index.js
 
-argo.use(require('argo-core'))
-argo.use(require('argo-core-user'))
-argo.use(require('argo-core-permission'))
-argo.use(require('argo-core-localization'))
+arqo.use(require('arqo-core'))
+arqo.use(require('arqo-core-user'))
+arqo.use(require('arqo-core-permission'))
+arqo.use(require('arqo-core-localization'))
 
 
 // example plugin
@@ -91,24 +91,24 @@ argo.use(require('argo-core-localization'))
 // }
 
 // function onLoad() {
-//   const convert = argo.resolve('convert');
+//   const convert = arqo.resolve('convert');
 //   convert.unit(100, 'g', 'kg');
 
-//   const admin = argo.resolve('request.admin');
+//   const admin = arqo.resolve('request.admin');
 //   admin.get('/', function(req, res) {
 
 //   })
 // }
 
-// argo.bind('startup', function() {
-//   argo.bind('request', '/admin', function(req, res) {
+// arqo.bind('startup', function() {
+//   arqo.bind('request', '/admin', function(req, res) {
 //     res.write('Test')
 //   })
 
 //   // Same as
-//   argo.request.admin.get('/', function() {})
+//   arqo.request.admin.get('/', function() {})
 
-//   argo.bind('convert.unit', function(value, type, to, from) {
+//   arqo.bind('convert.unit', function(value, type, to, from) {
 //     if(from === null) {
 //       from = lunar.setting(`convert.units.${type}`);
 //     }
@@ -142,9 +142,9 @@ argo.use(require('argo-core-localization'))
 // Alternative API
 
 // Routing
-const only = require('argo-action-filters').only
+const only = require('arqo-action-filters').only
 const route = only('route.change')
-const admin = require('argo-router').any('/admin')
+const admin = require('arqo-router').any('/admin')
 const adminRoute = compose(route, admin) // ????
 app.use(adminRoute('/posts/:id', async function(action, next) {
   // Handle route
