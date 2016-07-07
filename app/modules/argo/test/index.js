@@ -64,7 +64,7 @@ describe('Argo', function() {
       res.should.equal('test')
     })
 
-    it('should skip undefined', async function() {
+    it('should skip undefined return values', async function() {
       this.argo.use([
         async function one() { },
         async function two() {
@@ -77,6 +77,10 @@ describe('Argo', function() {
 
       let res = await this.argo.dispatch('undefined.check')
       res.should.equal('test')
+    })
+
+    it('should return undefined with no middleware', function() {
+      this.argo.dispatch('undefined.no.middleware').should.be.fulfilledWith(undefined)
     })
 
     it('should await next', async function() {
@@ -99,6 +103,8 @@ describe('Argo', function() {
           arr.push(3)
           await wait(2)
           await next()
+          await next()
+          await next() // Awaiting multiple times shouldn't affect order
           await wait(2)
           arr.push(6)
         },
@@ -114,7 +120,7 @@ describe('Argo', function() {
       arr.should.eql([1,2,3,4,5,6,7,8])
     })
 
-    it('should await next and skip undefined', async function() {
+    it('should await next and skip undefined return values', async function() {
       this.argo.use([
         async function one(_, next) {
           await next()
